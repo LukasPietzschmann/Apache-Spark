@@ -1,0 +1,75 @@
+\documentclass[xcolor=table, aspectratio=169, usepdftitle=false]{beamer}
+
+\makeatletter
+\appto\input@path{{pkgs/awesome-beamer}, {pkgs/smile}}
+\makeatother
+
+\usepackage[english, secslide, subsecslide, coloraccent=red]{beamerthemeawesome}
+
+\addbibresource{references.bib}
+
+\usepackage{scrextend}
+\usepackage{emoji}
+\usepackage{listings}
+\usepackage[verbatim=true]{lstfiracode}
+\usepackage[hidenotes]{pdfpc}
+\usepackage{tikzlings-owls}
+
+\title{In-Memory Processing}
+\author{Lukas Pietzschmann}
+\subtitle{Am Beispiel von Apache Spark}
+\email{lukas.pietzschmann@uni-ulm.de}
+\institute{Institut für Verteilte Systeme}
+\uni{Universität Ulm}
+\location{Ulm}
+\date{12. Januar 2023}
+\background{pics/sparks.png}
+
+\lstdefinestyle{animateblocks}{
+	basicstyle=\ttfamily\color{black!20},
+	moredelim=**[is][\only<+>{\color{black}}]{@}{@},
+}
+\lstset{
+	style=FiraCodeStyle,
+	basicstyle=\ttfamily,
+	commentstyle=\color{gray}\itshape,
+	keywordstyle=\bfseries,
+	escapeinside={<!}{!>},
+}
+
+\lstdefinelanguage{Python}{
+	morekeywords={access, and, break, class, continue, def, del, elif, else,%
+		except, exec, finally, for, from, global, if, import, in, is, lambda,%
+		not, or, pass, print, raise, return, try, while},
+	morekeywords=[2]{range},
+	sensitive=true,
+	morestring=[b]',
+	morestring=[b]",
+	morecomment=[s]{'''}{'''},
+	morecomment=[l]{//},
+	morecomment=[s]{"""}{"""},
+	morestring=[s]{r'}{'},
+	morestring=[s]{r"}{"},
+	morestring=[s]{r'''}{'''},
+	morestring=[s]{r"""}{"""},
+	morestring=[s]{u'}{'},
+	morestring=[s]{u"}{"},
+	morestring=[s]{u'''}{'''},
+	morestring=[s]{u"""}{"""}
+}
+
+\newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
+
+\begin{document}
+
+\maketitle
+
+% \input{slides/agenda.tex}
+\input{slides/intro.tex}
+\input{slides/ziele.tex}
+\input{slides/in-memory.tex}
+\input{slides/spark.tex}
+\input{slides/take-away.tex}
+\input{slides/references.tex}
+
+\end{document}
