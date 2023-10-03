@@ -7,7 +7,6 @@
 % https://stanford.edu/~rezab/sparkclass/slides/itas_workshop.pdf Seite 46
 
 \begin{frame}{Ziele}
-	\talknote{Zitat beginnt damit, dass MapRed nicht fuer alles brauchbar ist und spark dafuer die Loesung sein soll}
 	\enquote{\textcolor{gray}{
 		[...] \textcolor{accent}{reuse} a working set of
 		\textcolor{accent}{data across multiple parallel operations}. This includes many
@@ -41,13 +40,6 @@
 
 \subsection{Datenmodell}
 \begin{frame}{Arbeits-Daten}
-	\talknote<1>{Warum Arbeits Daten. Was gibts noch?}
-	\talknote<1>{Auch wenns aussieht wie eine Liste, Daten muessen nicht immer listenartig sein (viele Quellen)}
-	\talknote<1>{Schloss}
-	\talknote<7->{^n = repliziert}
-	\talknote<7->{Eng: lokal auf dem Worker + fast. Weit: global + slow}
-	\talknote<7->{Enge: map, filter, flatMap  Weit: ByKey}
-	\talknote<7->{Bilder Malen map, filter union, group by key. Fanout!!}
 	\begin{columns}[t]
 		\begin{column}{0.45\textwidth}
 			\begin{tikzpicture}[
@@ -121,7 +113,6 @@
 			\end{addmargin}
 			\vskip1em
 			\uncover<5->{
-				\talknote<5->{Und `shuffle` Operation}
 				% Und shuffle https://spark.apache.org/docs/3.3.1/rdd-programming-guide.html#shuffle-operations
 				% https://hps.vi4io.org/_media/teaching/autumn_term_2021/hpda21-lecture-07.pdf Seite 23
 				\textbf{Operationen}
@@ -143,10 +134,6 @@
 \end{frame}
 
 \begin{frame}{Arbeits-Daten}{Aktionen und Transformationen}
-	\talknote{Und noch viele mehr}
-	\talknote{Transformationen um die Anzahl der Partitionen zu kontrollieren}
-	\talknote{Viele sample transformationen}
-	\talknote{By oder ByKey suffix}
 	\begin{columns}[t]
 		\begin{column}{0.45\textwidth}
 			\textbf{Transformationen:}
@@ -177,7 +164,6 @@
 \end{frame}
 
 \begin{frame}[fragile]{Arbeits-Daten}{Beispiele}
-	\talknote{Live Beispiel!}
 	\begin{lstlisting}[language=python, style=animateblocks]
 @data = [1, 1, 2, 3, 5, 8, 13, 21, 34]
 rdd = sc.parallelize(data, 16)@
@@ -224,9 +210,6 @@ rdd_2.foreach(print)			# ?@
 \end{frame}
 
 \begin{frame}[fragile]{Arbeits-Daten}{Beispiele}
-	\talknote{Hier ist uns jetzt egal auf wie vielen Knoten das laeuft}
-	\talknote{Was wuerde in der normalen python Laufzeit passieren (Ueberlauf, dauert ewig)}
-	\talknote{Live Auslastung im Task-Mgr zeigen}
 			\begin{lstlisting}[language=python, style=animateblocks]
 @data = range(1, 1000000)
 rdd = sc.parallelize(data)@
@@ -252,8 +235,6 @@ r2.toDebugString()
 		\end{lstlisting}
 	\end{column}
 	\begin{column}{0.45\textwidth}
-		\talknote<1>{kombiniert transformationen in eine}
-		\talknote<2>{Anstatt `reduceByKey(add)` geht auch `countByKey()`}
 		\begin{onlyenv}<1>
 			\textbf{Lazy-Evaluation}
 			\begin{itemize}
@@ -286,8 +267,6 @@ o.toDebugString()
 \end{frame}
 
 \begin{frame}{Arbeits-Daten}{Persistenz}
-	\talknote{beispiel fuer cache am ende}
-	\talknote{2 bedeutet auf zwei knoten gesichert}
 	\begin{itemize}
 		\item Persistenz (\textcolor<2>{blue}{\texttt{persist()}})~$\approx$~Caching (\textcolor<3>{accent}{\texttt{cache()}})
 		\item Knoten speichern alle von ihnen berechneten Partitionen
@@ -303,7 +282,6 @@ o.toDebugString()
 
 
 \begin{frame}{Arbeits-Daten}{Fehlertoleranz}
-	\talknote{Wenn rdd gecached und speicher knapp -> auch neu}
 	\textbf{Zur Erinnerung:}
 	\begin{itemize}
 		\item Ein RDD ist ein schreibgeschützter, \tikz\node[inline] (D) {\uline{deterministischer}}; Datensatz
@@ -320,9 +298,6 @@ o.toDebugString()
 \end{frame}
 
 \begin{frame}{Geteilte Daten}{Broadcast Variablen}
-	\talknote{Malen wie alles kopiert wird}
-	\talknote{Daten sonst in jedem Closure}
-	\talknote{Closures erklaeren. Beispiel aus richtiger Programmiersprache machen}
 	\pdfpcnote{\\
 		```
 		def f(a):
@@ -459,12 +434,6 @@ o.toDebugString()
 			\end{addmargin}
 			\vskip1em
 			\textbf{Anwendungsfälle}
-			\talknote{Transformationen lazy -> Akkumulatoren lazy (update on action)}
-			\talknote{Problem:}
-			\talknote{Task Failure: Ok. Nur der korrekte zaehlt}
-			\talknote{Stage Failure (node down) in shuffle: Spark erzeugt output der letzten stage neu. tasks werden neu ausgefuehrt}
-			\talknote{Task langsam: spekulativ neuer task: doppelt}
-			\talknote{Warum asso und kommu. division}
 			% https://stackoverflow.com/questions/29494452/when-are-accumulators-truly-reliable
 			% http://imranrashid.com/posts/Spark-Accumulators/
 			\begin{addmargin}[1em]{0em}
@@ -488,7 +457,6 @@ broadcast_data = sc.broadcast(broadcast_data)@
 \end{frame}
 
 \begin{frame}[fragile]{Geteilte Daten}{Beispiele - Akkumulatoren}
-	\talknote{foreach action. map trans}
 	\begin{lstlisting}[language=python, style=animateblocks]
 @acc = sc.accumulator(0)@
 
@@ -501,9 +469,6 @@ broadcast_data = sc.broadcast(broadcast_data)@
 \subsection{Architektur}
 % https://hps.vi4io.org/_media/teaching/autumn_term_2021/hpda21-lecture-07.pdf Seite 11
 \begin{frame}<1-3>[label=arch]{Architektur}
-	\talknote{Und ganz rechts das Dateisystem (HDFS, HBase, Cassandra, Amazon S3)}
-	\talknote{Architektur auf Block}
-	\talknote<1>{Treiber ist auch eine Maschine, oder main}
 	\begin{columns}
 		\begin{column}{0.6\textwidth}
 			\begin{tikzpicture}[
@@ -577,7 +542,6 @@ broadcast_data = sc.broadcast(broadcast_data)@
 \end{frame}
 
 \begin{frame}{Architektur}{Einschub: Kontext}
-	\talknote{Warum funktioniert print auf mehreren Knoten nicht. Eher `collect` oder `take` und dann `foreach(print)`}
 	\begin{tikzpicture}[
 		remember picture,
 		overlay,
@@ -609,11 +573,6 @@ broadcast_data = sc.broadcast(broadcast_data)@
 \begin{frame}{Spark Schritt für Schritt}{Jobs, Tasks, Stages, Partitionen, Shuffle, ... \emoji{exploding-head}}
 	%Stages https://stanford.edu/~rezab/sparkclass/slides/itas_workshop.pdf#46 Seite 39
 	%https://www.cs.cornell.edu/courses/cs5412/2019sp/slides/Lecture-25.pdf Seite 55
-	\talknote{Unresolved logical, Resolved logical, Optimized logical, Physical}
-	\talknote{Shuffle typyischerweise durch ByKey, repartition, und join operationen}
-	\talknote{Shuffle nicht wie in hadoop (GroupByKey)!}
-	\talknote{Job von Scheduler}
-	\talknote{Job für jedes RDD}
 	\begin{description}
 		\item [Cluster] Viele Knoten die Spark ausführen.
 		\item [Treiber] Ein Knoten im Cluster der alle anderen Knoten steuert.
@@ -631,16 +590,10 @@ broadcast_data = sc.broadcast(broadcast_data)@
 \begin{frame}
 	\includegraphics[width=\textwidth]{pics/spongebob.jpg}
 	\tiny\url{https://knowyourmeme.com/memes/ight-imma-head-out}
-	\talknote{zurueck zu akkus. Warum scheiße}
 \end{frame}
 
 \subsection{Spark im echten Leben}
 \begin{frame}{Weitere Abstraktionen}{SQL}
-	\talknote{Komplexes beispiel viele stages}
-	\talknote{Alles nur Abstraktionen auf dem was wir bisher gesehen haben}
-	\talknote{Geschichte von Autorin die nichtmehr wusste was ein Closure macht}
-	\talknote{JDBC, hive, local}
-	\talknote{Schema Inferenz}
 	\begin{itemize}
 		\item Mehr Informationen \rightarrow~Bessere Optimierungsmöglichkeiten
 		\item Zwei neue \enquote{Datentypen}:
